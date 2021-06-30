@@ -33,7 +33,7 @@
         /// </summary>
         private void Read()
         {
-            var bytes = SharedMemory.Read(50, 4).ToArray();
+            var bytes = this._win32Data.Read(Win32DataMapIndexes.WindowHandleBack).ToArray();
             this.WindowHandleFromCpp = $"0x{BitConverter.ToInt32(bytes, 0).ToString("X08")}";
         }
 
@@ -44,7 +44,7 @@
         {
             var handle = this.HWnd.ToInt32();
             var bytes = BitConverter.GetBytes(handle);
-            SharedMemory.Write(bytes, 0);
+            this._win32Data.Write(bytes, 0);
 
             this.WindowHandle = $"0x{handle.ToString("X08")}";
         }

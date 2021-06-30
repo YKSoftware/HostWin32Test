@@ -98,13 +98,13 @@ void CClientDlg::OnBnClickedButton1()
 
 	TCHAR buff[256] = { 0 };
 	byte bytes[sizeof(int)] = { 0 };
-	if (m_SharedMemory.Read(bytes, 0, sizeof(int)) == sizeof(int))
+	if (m_SharedData.Read(bytes, E_MAP_WindowHandle) == sizeof(int))
 	{
 		m_hWndFromWPF = (HWND)(*(int*)bytes);
 		if (m_hWndFromWPF != NULL)
 		{
-
 			CWnd* pWnd = CWnd::FromHandle(m_hWndFromWPF);
+
 			RECT rect1 = { 10, 10, 120, 30 };
 			m_Button1.Create(_T("Button1"), WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, rect1, pWnd, 1003);
 			_stprintf_s(buff, _T("0x%08x"), (int)m_Button1.GetSafeHwnd());
@@ -129,7 +129,7 @@ void CClientDlg::OnBnClickedButton2()
 	TCHAR buff[256] = { 0 };
 	_stprintf_s(buff, _T("0x%08x"), ++m_Count);
 	GetDlgItem(IDC_STATIC2)->SetWindowTextW(buff);
-	m_SharedMemory.Write((byte*)&m_Count, 100, sizeof(int));
+	m_SharedData.Write((byte*)&m_Count, E_MAP_WatchDogFromWin32);
 }
 
 
@@ -138,5 +138,5 @@ void CClientDlg::OnBnClickedButton3()
 	TCHAR buff[256] = { 0 };
 	_stprintf_s(buff, _T("0x%08x"), (int)m_hWndFromWPF);
 	GetDlgItem(IDC_STATIC3)->SetWindowTextW(buff);
-	m_SharedMemory.Write((byte*)&m_hWndFromWPF, 50, sizeof(int));
+	m_SharedData.Write((byte*)&m_hWndFromWPF, E_MAP_WindowHandleBack);
 }

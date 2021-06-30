@@ -58,8 +58,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\Extensions.cs" />
     <Compile Include="Core\User32.cs" />
+    <Compile Include="Models\SizeAttribute.cs" />
     <Compile Include="Models\Win32Data.cs" />
+    <Compile Include="Models\Win32DataMap.cs" />
+    <Compile Include="Models\Win32DataMapIndexes.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>

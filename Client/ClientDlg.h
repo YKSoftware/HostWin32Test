@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include "SharedMemory.h"
+#include "Win32Data.h"
 
 // CClientDlg ダイアログ
 class CClientDlg : public CDialogEx
@@ -32,7 +32,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 
-	SharedMemory m_SharedMemory;
+	Win32Data m_SharedData;
 	HWND m_hWndFromWPF;
 	CButton m_Button1;
 	CButton m_Button2;

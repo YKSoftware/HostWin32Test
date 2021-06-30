@@ -1,6 +1,7 @@
 ﻿namespace HostWin32Test.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Timers;
 
@@ -15,7 +16,19 @@
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            this.Counter = BitConverter.ToInt32(SharedMemory.Read(100, 4).ToArray(), 0);
+            this.Counter = BitConverter.ToInt32(Read(Win32DataMapIndexes.WatchDogFromWin32).ToArray(), 0);
+        }
+
+        public IEnumerable<byte> Read(Win32DataMapIndexes index)
+        {
+            var map = Win32DataMap.GetMap(index);
+            return SharedMemory.Read(map.Index, map.Size);
+        }
+
+        public void Write(byte[] bytes, Win32DataMapIndexes index)
+        {
+            var map = Win32DataMap.GetMap(index);
+            SharedMemory.Write(bytes, map.Index);
         }
 
         public Action<Win32Data> Win32CounterChanged;

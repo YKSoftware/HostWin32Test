@@ -1,6 +1,5 @@
 #pragma once
 
-// CClientDlg ダイアログ
 class SharedMemory
 {
 public:
