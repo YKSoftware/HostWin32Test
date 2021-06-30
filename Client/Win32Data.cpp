@@ -20,6 +20,9 @@ Win32Data::Win32Data()
 		Win32DataMap[i][INDEX] = index;
 		index += Win32DataMap[i][SIZE];
 	}
+
+	long size = Win32DataMap[E_MAP_MaxValue - 1][INDEX] + Win32DataMap[E_MAP_MaxValue - 1][SIZE];
+	m_SharedMemory.TryInitialize(size);
 }
 
 // デストラクタ

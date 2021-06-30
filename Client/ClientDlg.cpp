@@ -88,8 +88,6 @@ HCURSOR CClientDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-
-
 // Read ボタン
 void CClientDlg::OnBnClickedButton1()
 {
@@ -132,7 +130,7 @@ void CClientDlg::OnBnClickedButton2()
 	m_SharedData.Write((byte*)&m_Count, E_MAP_WatchDogFromWin32);
 }
 
-
+// WindowHandle Write ボタン
 void CClientDlg::OnBnClickedButton3()
 {
 	TCHAR buff[256] = { 0 };

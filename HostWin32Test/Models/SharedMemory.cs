@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.IO.MemoryMappedFiles;
+    using System.Linq;
     using System.Threading;
 
     /// <summary>
@@ -14,6 +15,9 @@
         /// </summary>
         static SharedMemory()
         {
+            var last = Win32DataMap.Items.Last();
+            _memorySize = last.Index + last.Size;
+
             TryInitialize();
         }
 
@@ -124,7 +128,7 @@
         private static MemoryMappedFile _sharedFile;
         private static MemoryMappedViewAccessor _accessor;
         private const string _sharedMemoryName = "HostWin32Test.Memory01";
-        private const long _memorySize = 10 * 1024;
+        private static readonly long _memorySize;
         private const int _waitTime = 500;
     }
 }
