@@ -1,4 +1,3 @@
-
 // ClientDlg.cpp : 実装ファイル
 //
 
@@ -11,11 +10,9 @@
 #define new DEBUG_NEW
 #endif
 
+#define ID_TIMER0	0
 
 // CClientDlg ダイアログ
-
-
-
 CClientDlg::CClientDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_CLIENT_DIALOG, pParent)
 {
@@ -33,6 +30,7 @@ BEGIN_MESSAGE_MAP(CClientDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CClientDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CClientDlg::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON3, &CClientDlg::OnBnClickedButton3)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -88,6 +86,21 @@ HCURSOR CClientDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+void CClientDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	switch (nIDEvent)
+	{
+		case ID_TIMER0:
+			TCHAR buff[256] = { 0 };
+			_stprintf_s(buff, _T("0x%08x"), ++m_Count);
+			GetDlgItem(IDC_STATIC2)->SetWindowTextW(buff);
+			m_SharedData.Write((byte*)&m_Count, E_MAP_WatchDogFromWin32);
+			break;
+	}
+
+	CDialogEx::OnTimer(nIDEvent);
+}
+
 // Read ボタン
 void CClientDlg::OnBnClickedButton1()
 {
@@ -124,10 +137,17 @@ void CClientDlg::OnBnClickedButton1()
 // Write ボタン
 void CClientDlg::OnBnClickedButton2()
 {
-	TCHAR buff[256] = { 0 };
-	_stprintf_s(buff, _T("0x%08x"), ++m_Count);
-	GetDlgItem(IDC_STATIC2)->SetWindowTextW(buff);
-	m_SharedData.Write((byte*)&m_Count, E_MAP_WatchDogFromWin32);
+	if (m_IsTimerEnabled)
+	{
+		KillTimer(ID_TIMER0);
+		GetDlgItem(IDC_BUTTON2)->SetWindowTextW(L"Timer Start");
+	}
+	else
+	{
+		SetTimer(ID_TIMER0, 100, NULL);
+		GetDlgItem(IDC_BUTTON2)->SetWindowTextW(L"Timer Stop");
+	}
+	m_IsTimerEnabled = !m_IsTimerEnabled;
 }
 
 // WindowHandle Write ボタン

@@ -37,8 +37,10 @@ protected:
 	CButton m_Button1;
 	CButton m_Button2;
 	int m_Count = 0;
+	bool m_IsTimerEnabled = false;
 
 public:
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedButton3();
