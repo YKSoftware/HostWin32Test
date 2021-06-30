@@ -37,5 +37,18 @@
         }
 
         #endregion HwndHost 抽象クラスのメンバ
+
+        protected override IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            switch (msg)
+            {
+                case (int)User32.WMs.WM_COMMAND:
+                    var id = (uint)wParam.ToInt32() & 0x0000ffff;
+                    System.Diagnostics.Debug.WriteLine(id);
+                    break;
+            }
+
+            return base.WndProc(hwnd, msg, wParam, lParam, ref handled);
+        }
     }
 }
