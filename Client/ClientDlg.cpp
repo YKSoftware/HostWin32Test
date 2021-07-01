@@ -141,15 +141,18 @@ void CClientDlg::OnBnClickedButton1()
 		{
 			CWnd* pWnd = CWnd::FromHandle(m_hWndFromWPF);
 
-			RECT rect1 = { 10, 10, 120, 30 };
-			m_Button1.Create(_T("Button1"), WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, rect1, pWnd, 1003);
-			_stprintf_s(buff, _T("0x%08x"), (int)m_Button1.GetSafeHwnd());
-			m_Button1.SetWindowTextW(buff);
+			//RECT rect1 = { 10, 10, 120, 30 };
+			//m_Button1.Create(_T("Button1"), WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, rect1, pWnd, 1003);
+			//_stprintf_s(buff, _T("0x%08x"), (int)m_Button1.GetSafeHwnd());
+			//m_Button1.SetWindowTextW(buff);
 
-			RECT rect2 = { 50, 50, 160, 70 };
-			m_Button2.Create(_T("Button2"), WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, rect2, pWnd, 1004);
-			_stprintf_s(buff, _T("0x%08x"), (int)m_Button2.GetSafeHwnd());
-			m_Button2.SetWindowTextW(buff);
+			//RECT rect2 = { 50, 50, 160, 70 };
+			//m_Button2.Create(_T("Button2"), WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, rect2, pWnd, 1004);
+			//_stprintf_s(buff, _T("0x%08x"), (int)m_Button2.GetSafeHwnd());
+			//m_Button2.SetWindowTextW(buff);
+
+			RECT rect3 = { 0, 0, 260, 260 };
+			m_DummyWindow.Create(NULL, _T("DummyWindow"), WS_VISIBLE | WS_CHILD, rect3, pWnd, 1005);
 
 			GetDlgItem(IDC_BUTTON1)->EnableWindow(false);
 
