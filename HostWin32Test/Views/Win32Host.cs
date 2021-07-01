@@ -19,14 +19,18 @@
 
         protected override HandleRef BuildWindowCore(HandleRef hwndParent)
         {
-            this.HWnd = User32.CreateWindowEx(0, "static", "",
-                                              User32.WS_CHILD | User32.WS_VISIBLE,
-                                              0, 0,
-                                              260, 260,
-                                              hwndParent.Handle,
-                                              (IntPtr)User32.HOST_ID,
-                                              IntPtr.Zero,
-                                              0);
+            this.HWnd = User32.CreateWindowEx(          // [参考](http://chokuto.ifdef.jp/advanced/function/CreateWindowEx.html)
+                User32.WS_EX_LEFT,                      // 拡張ウィンドウスタイル : 一般的な左揃えされたプロパティを持つウィンドウ
+                "static",                               // コントロールクラス名 : static はシステム定義済みコントロールのクラス名で、スタティックコントロールを表す。
+                "",                                     // ウィンドウ名 : キャプションとして表示される
+                User32.WS_CHILD | User32.WS_VISIBLE,    // ウィンドウスタイル : 
+                0, 0,                                   // 作成するウィンドウの (x, y) 座標
+                260, 260,                               // 作成するウィンドウの幅と高さ
+                hwndParent.Handle,                      // 親ウィンドウハンドル
+                (IntPtr)User32.HOST_ID,                 // 自分の固有 ID
+                IntPtr.Zero,                            // このパラメータは無視されます
+                IntPtr.Zero                             // WM_CREATE メッセージの lParam として渡される CREATESTRUCT 構造体へのポインタ。不要な場合は NULL を指定。
+                );
 
             return new HandleRef(this, this.HWnd);
         }
