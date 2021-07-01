@@ -38,6 +38,7 @@ protected:
 	CButton m_Button2;
 	int m_Count = 0;
 	bool m_IsTimerEnabled = false;
+	static LRESULT CALLBACK MyHookProc(int nCode, WPARAM wparam, LPARAM lparam);
 
 public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);

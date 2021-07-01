@@ -11,6 +11,31 @@
 #endif
 
 #define ID_TIMER0	0
+static HHOOK g_Hook;
+
+void DebugOutput(LPCWSTR lpStr)
+{
+	::OutputDebugStringW(lpStr);
+	::OutputDebugStringW(L"\n");
+}
+
+void DebugErrorMessageOutput(DWORD error)
+{
+	DWORD err = GetLastError();
+	LPVOID lpMsgBuf;
+	FormatMessage(				//エラー表示文字列作成
+		FORMAT_MESSAGE_ALLOCATE_BUFFER |
+		FORMAT_MESSAGE_FROM_SYSTEM |
+		FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL, err,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&lpMsgBuf, 0, NULL);
+
+	TCHAR hoge[512] = { 0 };
+	_stprintf_s(hoge, _T("ERROR: %d(0x%08x) : %s"), err, err, lpMsgBuf);
+	::OutputDebugStringW(hoge);
+	::OutputDebugStringW(L"\n");
+}
 
 // CClientDlg ダイアログ
 CClientDlg::CClientDlg(CWnd* pParent /*=NULL*/)
@@ -127,6 +152,10 @@ void CClientDlg::OnBnClickedButton1()
 			m_Button2.SetWindowTextW(buff);
 
 			GetDlgItem(IDC_BUTTON1)->EnableWindow(false);
+
+			DebugOutput(L"もしかしてフックできるんちゃう？");
+			g_Hook = ::SetWindowsHookExW(WH_CALLWNDPROC, (HOOKPROC)CClientDlg::MyHookProc, AfxGetInstanceHandle(), 0);
+			DebugErrorMessageOutput(GetLastError());
 		}
 	}
 
@@ -157,4 +186,9 @@ void CClientDlg::OnBnClickedButton3()
 	_stprintf_s(buff, _T("0x%08x"), (int)m_hWndFromWPF);
 	GetDlgItem(IDC_STATIC3)->SetWindowTextW(buff);
 	m_SharedData.Write((byte*)&m_hWndFromWPF, E_MAP_WindowHandleBack);
+}
+
+LRESULT CALLBACK CClientDlg::MyHookProc(int nCode, WPARAM wparam, LPARAM lparam)
+{
+	return ::CallNextHookEx(g_Hook, nCode, wparam, lparam);
 }
