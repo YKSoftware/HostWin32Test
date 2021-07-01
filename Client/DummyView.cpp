@@ -23,6 +23,7 @@ DummyView::~DummyView()
 BEGIN_MESSAGE_MAP(DummyView, CWnd)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_PAINT()
+	ON_BN_CLICKED(1003, &DummyView::OnBnClicked)
 END_MESSAGE_MAP()
 
 
@@ -58,4 +59,9 @@ void DummyView::OnPaint()
 
 	pDC->SelectObject(pOldBrush);
 	pDC->SelectObject(pOldPen);
+}
+
+void DummyView::OnBnClicked()
+{
+	::OutputDebugStringW(L"ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½B\n");
 }
