@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Win32Data.h"
+#include "DummyView.h"
 
 // CClientDlg ダイアログ
 class CClientDlg : public CDialogEx
@@ -36,8 +37,10 @@ protected:
 	HWND m_hWndFromWPF;
 	CButton m_Button1;
 	CButton m_Button2;
+	DummyView m_DummyWindow;
 	int m_Count = 0;
 	bool m_IsTimerEnabled = false;
+	static LRESULT CALLBACK MyHookProc(int nCode, WPARAM wparam, LPARAM lparam);
 
 public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);

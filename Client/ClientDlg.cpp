@@ -11,6 +11,31 @@
 #endif
 
 #define ID_TIMER0	0
+static HHOOK g_Hook;
+
+void DebugOutput(LPCWSTR lpStr)
+{
+	::OutputDebugStringW(lpStr);
+	::OutputDebugStringW(L"\n");
+}
+
+void DebugErrorMessageOutput(DWORD error)
+{
+	DWORD err = GetLastError();
+	LPVOID lpMsgBuf;
+	FormatMessage(				//エラー表示文字列作成
+		FORMAT_MESSAGE_ALLOCATE_BUFFER |
+		FORMAT_MESSAGE_FROM_SYSTEM |
+		FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL, err,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&lpMsgBuf, 0, NULL);
+
+	TCHAR hoge[512] = { 0 };
+	_stprintf_s(hoge, _T("ERROR: %d(0x%08x) : %s"), err, err, (LPTSTR)lpMsgBuf);
+	::OutputDebugStringW(hoge);
+	::OutputDebugStringW(L"\n");
+}
 
 // CClientDlg ダイアログ
 CClientDlg::CClientDlg(CWnd* pParent /*=NULL*/)
@@ -116,17 +141,24 @@ void CClientDlg::OnBnClickedButton1()
 		{
 			CWnd* pWnd = CWnd::FromHandle(m_hWndFromWPF);
 
-			RECT rect1 = { 10, 10, 120, 30 };
-			m_Button1.Create(_T("Button1"), WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, rect1, pWnd, 1003);
-			_stprintf_s(buff, _T("0x%08x"), (int)m_Button1.GetSafeHwnd());
-			m_Button1.SetWindowTextW(buff);
+			//RECT rect1 = { 10, 10, 120, 30 };
+			//m_Button1.Create(_T("Button1"), WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, rect1, pWnd, 1003);
+			//_stprintf_s(buff, _T("0x%08x"), (int)m_Button1.GetSafeHwnd());
+			//m_Button1.SetWindowTextW(buff);
 
-			RECT rect2 = { 50, 50, 160, 70 };
-			m_Button2.Create(_T("Button2"), WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, rect2, pWnd, 1004);
-			_stprintf_s(buff, _T("0x%08x"), (int)m_Button2.GetSafeHwnd());
-			m_Button2.SetWindowTextW(buff);
+			//RECT rect2 = { 50, 50, 160, 70 };
+			//m_Button2.Create(_T("Button2"), WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, rect2, pWnd, 1004);
+			//_stprintf_s(buff, _T("0x%08x"), (int)m_Button2.GetSafeHwnd());
+			//m_Button2.SetWindowTextW(buff);
+
+			RECT rect3 = { 0, 0, 260, 260 };
+			m_DummyWindow.Create(NULL, _T("DummyWindow"), WS_VISIBLE | WS_CHILD, rect3, pWnd, 1005);
 
 			GetDlgItem(IDC_BUTTON1)->EnableWindow(false);
+
+			DebugOutput(L"もしかしてフックできるんちゃう？");
+			g_Hook = ::SetWindowsHookExW(WH_CALLWNDPROC, (HOOKPROC)CClientDlg::MyHookProc, AfxGetInstanceHandle(), 0);
+			DebugErrorMessageOutput(GetLastError());
 		}
 	}
 
@@ -157,4 +189,9 @@ void CClientDlg::OnBnClickedButton3()
 	_stprintf_s(buff, _T("0x%08x"), (int)m_hWndFromWPF);
 	GetDlgItem(IDC_STATIC3)->SetWindowTextW(buff);
 	m_SharedData.Write((byte*)&m_hWndFromWPF, E_MAP_WindowHandleBack);
+}
+
+LRESULT CALLBACK CClientDlg::MyHookProc(int nCode, WPARAM wparam, LPARAM lparam)
+{
+	return ::CallNextHookEx(g_Hook, nCode, wparam, lparam);
 }

@@ -191,6 +191,7 @@
   <ItemGroup>
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientDlg.h" />
+    <ClInclude Include="DummyView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SharedMemory.h" />
     <ClInclude Include="stdafx.h" />
@@ -200,6 +201,7 @@
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientDlg.cpp" />
+    <ClCompile Include="DummyView.cpp" />
     <ClCompile Include="SharedMemory.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
