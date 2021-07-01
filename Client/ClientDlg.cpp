@@ -32,7 +32,7 @@ void DebugErrorMessageOutput(DWORD error)
 		(LPTSTR)&lpMsgBuf, 0, NULL);
 
 	TCHAR hoge[512] = { 0 };
-	_stprintf_s(hoge, _T("ERROR: %d(0x%08x) : %s"), err, err, lpMsgBuf);
+	_stprintf_s(hoge, _T("ERROR: %d(0x%08x) : %s"), err, err, (LPTSTR)lpMsgBuf);
 	::OutputDebugStringW(hoge);
 	::OutputDebugStringW(L"\n");
 }
