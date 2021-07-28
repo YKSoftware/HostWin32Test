@@ -46,6 +46,10 @@
         {
             switch (msg)
             {
+                case (int)User32.WMs.WM_PAINT:
+                    System.Diagnostics.Debug.WriteLine($"WM_PAINT to 0x{hwnd.ToInt32().ToString("X08")}");
+                    break;
+
                 case (int)User32.WMs.WM_COMMAND:
                     var id = (uint)wParam.ToInt32() & 0x0000ffff;
                     System.Diagnostics.Debug.WriteLine(id);
