@@ -3,8 +3,10 @@
 
 int Win32DataMap[E_MAP_MaxValue][2] = {
 	{ 4, 0 },			// E_MAP_WindowHandle
-	{ 4, 0 },			// E_MAP_WatchDogToWin32,
+	{ 4, 0 },			// E_MAP_CreateWindowCommand
+	{ 4, 0 },			// E_MAP_WatchDogToWin32
 	{ 4, 0 },			// E_MAP_WindowHandleBack
+	{ 4, 0 },			// E_MAP_CreateWindowAnswer
 	{ 4, 0 }			// E_MAP_WatchDogFromWin32
 };
 
