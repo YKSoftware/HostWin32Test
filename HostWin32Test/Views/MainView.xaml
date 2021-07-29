@@ -11,7 +11,7 @@
            IsClosingConfirmationEnabled="False">
   <StackPanel>
     <TextBlock Text="{Binding WindowHandle}" />
-    <vw:Win32Host HWnd="{Binding HWnd, Mode=OneWayToSource}" Width="260" Height="260" />
+    <ContentControl x:Name="win32ContentHost" Width="260" Height="260" />
     <TextBlock Text="{Binding Counter, StringFormat='{}Counter = {0}'}" />
     <TextBlock Text="{Binding WindowHandleFromCpp}" />
     <Button Content="Read Window Handle From Cpp" Command="{Binding ReadCommand, Mode=OneTime}" />

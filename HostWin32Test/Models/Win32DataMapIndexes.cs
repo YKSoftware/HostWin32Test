@@ -9,6 +9,12 @@
         WindowHandle = 0,
 
         /// <summary>
+        /// CreateWindow 相当の処理をお願いします。
+        /// </summary>
+        [Size(sizeof(int))]
+        CreateWindowCommand,
+
+        /// <summary>
         /// Win32 へのウォッチドッグ用カウンタ
         /// </summary>
         [Size(sizeof(int))]
@@ -23,6 +29,12 @@
         /// </summary>
         [Size(sizeof(int))]
         WindowHandleBack,
+
+        /// <summary>
+        /// CreateWindow 相当の処理をおこないました。
+        /// </summary>
+        [Size(sizeof(int))]
+        CreateWindowAnswer,
 
         /// <summary>
         /// Win32 からのウォッチドッグ用カウンタ

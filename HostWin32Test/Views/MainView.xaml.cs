@@ -1,5 +1,6 @@
 ﻿namespace HostWin32Test.Views
 {
+    using System;
     using YKToolkit.Controls;
 
     /// <summary>
@@ -10,6 +11,12 @@
         public MainView()
         {
             InitializeComponent();
+
+            this.Dispatcher.BeginInvoke((Action)(async () =>
+            {
+                var win32Host = await (App.Current as App).CreateWin32ControlAsync();
+                this.win32ContentHost.Content = win32Host;
+            }));
         }
     }
 }
