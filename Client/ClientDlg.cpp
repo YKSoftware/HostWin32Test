@@ -142,13 +142,14 @@ void CClientDlg::PolingSharedMemory()
 	long size = m_SharedData.GetTotalSize();
 	{
 		byte* bytes = new byte[size];
-		TCHAR* buff = new TCHAR[3 * size + 1];
+		int len = 4 * size + 1;
+		TCHAR* buff = new TCHAR[len];
 
 		if (m_SharedData.ReadToEnd(bytes) == size)
 		{
 			for (int i = 0; i < size; i++)
 			{
-				wsprintf(buff + 3 * i, _T("%02x "), bytes[i]);
+				_stprintf_s(buff + 3 * i, len - 3 * i, _T("%02x "), bytes[i]);
 			}
 			GetDlgItem(IDC_STATIC1)->SetWindowTextW(buff);
 		}
