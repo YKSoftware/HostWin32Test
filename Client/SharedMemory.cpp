@@ -77,6 +77,23 @@ bool SharedMemory::TryInitialize(long size)
 	}
 }
 
+int SharedMemory::ReadToEnd(byte* bytes, int offset)
+{
+	if ((hSharedMemory == NULL) || (m_pData == NULL))
+	{
+		return -1;
+	}
+	if (offset >= sharedMemorySize)
+		return -1;
+	int length = sharedMemorySize - offset;
+
+	WaitForSingleObject(hMutex, INFINITE);
+	memcpy_s(bytes, length, &m_pData[offset], length);
+	ReleaseMutex(hMutex);
+
+	return length;
+}
+
 int SharedMemory::Read(byte* bytes, int index, int size)
 {
 	if ((hSharedMemory == NULL) || (m_pData == NULL))

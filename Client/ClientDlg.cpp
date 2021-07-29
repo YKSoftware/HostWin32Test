@@ -11,7 +11,6 @@
 #endif
 
 #define ID_TIMER0	0
-#define ID_TIMER1	1
 static HHOOK g_Hook;
 
 void DebugOutput(LPCWSTR lpStr)
@@ -63,7 +62,6 @@ BEGIN_MESSAGE_MAP(CClientDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CClientDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CClientDlg::OnBnClickedButton2)
-	ON_BN_CLICKED(IDC_BUTTON3, &CClientDlg::OnBnClickedButton3)
 	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
@@ -125,20 +123,39 @@ void CClientDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	switch (nIDEvent)
 	{
-		// WPF 側からのコマンドをポーリング
+		// 共有メモリをポーリング
 		case ID_TIMER0:
-			PolingCreateCommand();
-			break;
+			// 表示用にポーリング
+			PolingSharedMemory();
 
-		case ID_TIMER1:
-			TCHAR buff[256] = { 0 };
-			_stprintf_s(buff, _T("0x%08x"), ++m_Count);
-			GetDlgItem(IDC_STATIC2)->SetWindowTextW(buff);
-			m_SharedData.Write((byte*)&m_Count, E_MAP_WatchDogFromWin32);
+			// コマンド処理用にポーリング
+			// 冗長だけど後でコードをわけたりするときのためにこのままにしておく。
+			PolingCreateCommand();
 			break;
 	}
 
 	CDialogEx::OnTimer(nIDEvent);
+}
+
+void CClientDlg::PolingSharedMemory()
+{
+	long size = m_SharedData.GetTotalSize();
+	{
+		byte* bytes = new byte[size];
+		TCHAR* buff = new TCHAR[3 * size + 1];
+
+		if (m_SharedData.ReadToEnd(bytes) == size)
+		{
+			for (int i = 0; i < size; i++)
+			{
+				wsprintf(buff + 3 * i, _T("%02x "), bytes[i]);
+			}
+			GetDlgItem(IDC_STATIC1)->SetWindowTextW(buff);
+		}
+
+		delete buff;
+		delete bytes;
+	}
 }
 
 void CClientDlg::PolingCreateCommand()
@@ -146,22 +163,16 @@ void CClientDlg::PolingCreateCommand()
 	byte bytes[sizeof(int)] = { 0 };
 	m_SharedData.Read(bytes, E_MAP_CreateWindowCommand);
 
-	if (m_HasCreateCommand == false)
+	if (*(int*)bytes == 0)
 	{
-		if (*(int*)bytes != 0)
-		{
-			m_HasCreateCommand = true;
-			HWND childHandle = CreateChild();
-			m_SharedData.Write((byte*)(int)childHandle, E_MAP_CreateWindowAnswer);
-		}
+		byte zeros[4] = { 0 };
+		m_SharedData.Write((byte*)zeros, E_MAP_CreateWindowAnswer);
 	}
 	else
 	{
-		if (*(int*)bytes == 0)
+		if (m_HasCreateCommand == false)
 		{
-			m_HasCreateCommand = false;
-			byte zeros[sizeof(int)] = { 0 };
-			m_SharedData.Write(zeros, E_MAP_CreateWindowAnswer);
+			m_HasCreateCommand = true;
 		}
 	}
 }
@@ -201,72 +212,25 @@ HWND CClientDlg::CreateChild()
 	return 0;
 }
 
-// Read ボタン
+// WriteAnswer ボタン
 void CClientDlg::OnBnClickedButton1()
 {
-	if (m_hWndFromWPF != NULL)
-		return;
-
-	TCHAR buff[256] = { 0 };
-	byte bytes[sizeof(int)] = { 0 };
-	if (m_SharedData.Read(bytes, E_MAP_WindowHandle) == sizeof(int))
+	if (m_ChildHandle != NULL)
 	{
-		m_hWndFromWPF = (HWND)(*(int*)bytes);
-		if (m_hWndFromWPF != NULL)
-		{
-			CWnd* pWnd = CWnd::FromHandle(m_hWndFromWPF);
-
-			//RECT rect2 = { 50, 50, 160, 70 };
-			//m_Button2.Create(_T("Button2"), WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, rect2, pWnd, 1004);
-			//_stprintf_s(buff, _T("0x%08x"), (int)m_Button2.GetSafeHwnd());
-			//m_Button2.SetWindowTextW(buff);
-
-			RECT rect3 = { 0, 0, 260, 260 };
-			m_pDummyWindow->Create(NULL, _T("DummyWindow"), WS_VISIBLE | WS_CHILD, rect3, pWnd, 1005);
-
-			RECT rect1 = { 10, 10, 120, 30 };
-			m_Button1.Create(_T("Button1"), WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, rect1, m_pDummyWindow, 1003);
-			_stprintf_s(buff, _T("0x%08x"), (int)m_Button1.GetSafeHwnd());
-			m_Button1.SetWindowTextW(buff);
-
-			GetDlgItem(IDC_BUTTON1)->EnableWindow(false);
-
-			DebugOutput(L"もしかしてフックできるんちゃう？");
-			g_Hook = ::SetWindowsHookExW(WH_CALLWNDPROC, (HOOKPROC)CClientDlg::MyHookProc, AfxGetInstanceHandle(), 0);
-			DebugErrorMessageOutput(GetLastError());
-		}
+		int handle = (int)m_ChildHandle;
+		m_SharedData.Write((byte*)handle, E_MAP_CreateWindowAnswer);
 	}
-
-	_stprintf_s(buff, _T("0x%08x"), (int)m_hWndFromWPF);
-	GetDlgItem(IDC_STATIC1)->SetWindowTextW(buff);
 }
 
-// Write ボタン
+// CreateWindow ボタン
 void CClientDlg::OnBnClickedButton2()
 {
-	if (m_IsTimerEnabled)
+	if (m_HasCreateCommand)
 	{
-		KillTimer(ID_TIMER1);
-		GetDlgItem(IDC_BUTTON2)->SetWindowTextW(L"Timer Start");
-	}
-	else
-	{
-		SetTimer(ID_TIMER1, 100, NULL);
-		GetDlgItem(IDC_BUTTON2)->SetWindowTextW(L"Timer Stop");
-	}
-	m_IsTimerEnabled = !m_IsTimerEnabled;
-}
+		m_ChildHandle = CreateChild();
 
-// WindowHandle Write ボタン
-void CClientDlg::OnBnClickedButton3()
-{
-	TCHAR buff[256] = { 0 };
-	_stprintf_s(buff, _T("0x%08x"), (int)m_hWndFromWPF);
-	GetDlgItem(IDC_STATIC3)->SetWindowTextW(buff);
-	m_SharedData.Write((byte*)&m_hWndFromWPF, E_MAP_WindowHandleBack);
-}
-
-LRESULT CALLBACK CClientDlg::MyHookProc(int nCode, WPARAM wparam, LPARAM lparam)
-{
-	return ::CallNextHookEx(g_Hook, nCode, wparam, lparam);
+		TCHAR buff[11] = { 0 };
+		wsprintf(buff, _T("0x%08x"), (int)m_ChildHandle);
+		GetDlgItem(IDC_STATIC2)->SetWindowTextW(buff);
+	}
 }

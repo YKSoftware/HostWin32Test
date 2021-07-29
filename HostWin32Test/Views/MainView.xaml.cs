@@ -11,12 +11,12 @@
         public MainView()
         {
             InitializeComponent();
+        }
 
-            this.Dispatcher.BeginInvoke((Action)(async () =>
-            {
-                var win32Host = await (App.Current as App).CreateWin32ControlAsync();
-                this.win32ContentHost.Content = win32Host;
-            }));
+        private async void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var win32Host = await (App.Current as App).CreateWin32ControlAsync();
+            this.win32ContentHost.Content = win32Host;
         }
     }
 }

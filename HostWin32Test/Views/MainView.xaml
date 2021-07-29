@@ -10,11 +10,8 @@
            Width="800" Height="600"
            IsClosingConfirmationEnabled="False">
   <StackPanel>
-    <TextBlock Text="{Binding WindowHandle}" />
+    <Button Content="Create Win32Host" Click="Button_Click" />
     <ContentControl x:Name="win32ContentHost" Width="260" Height="260" />
-    <TextBlock Text="{Binding Counter, StringFormat='{}Counter = {0}'}" />
-    <TextBlock Text="{Binding WindowHandleFromCpp}" />
-    <Button Content="Read Window Handle From Cpp" Command="{Binding ReadCommand, Mode=OneTime}" />
-    <Button Content="Write Window Handle To Cpp" Command="{Binding WriteCommand, Mode=OneTime}" />
+    <Button Content="Dummy Button" />
   </StackPanel>
 </YK:Window>
