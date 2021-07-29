@@ -63,6 +63,7 @@ BEGIN_MESSAGE_MAP(CClientDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CClientDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CClientDlg::OnBnClickedButton2)
 	ON_WM_TIMER()
+	ON_WM_COPYDATA()
 END_MESSAGE_MAP()
 
 
@@ -178,6 +179,26 @@ void CClientDlg::PolingCreateCommand()
 	}
 }
 
+// Message handler for about box.
+INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+		case WM_INITDIALOG:
+			return (INT_PTR)TRUE;
+
+		case WM_COMMAND:
+			if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+			{
+				// EndDialog(hDlg, LOWORD(wParam));
+				return (INT_PTR)TRUE;
+			}
+			break;
+	}
+	return (INT_PTR)FALSE;
+}
+
 HWND CClientDlg::CreateChild()
 {
 	byte bytes[sizeof(int)] = { 0 };
@@ -201,6 +222,8 @@ HWND CClientDlg::CreateChild()
 			delete m_pButton;
 		}
 		m_pButton = new CButton();
+
+		//return CreateDialog(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDD_DIALOG1), m_hWndFromWPF, (DLGPROC)About);
 
 		m_pDummyWindow->Create(NULL, _T("DummyWindow"), WS_VISIBLE | WS_CHILD, rect1, pWnd, 1005);
 		m_pButton->Create(_T("Button1"), WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, rect2, m_pDummyWindow, 1003);
@@ -234,4 +257,22 @@ void CClientDlg::OnBnClickedButton2()
 		wsprintf(buff, _T("0x%08x"), (int)m_ChildHandle);
 		GetDlgItem(IDC_STATIC2)->SetWindowTextW(buff);
 	}
+}
+
+
+BOOL CClientDlg::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
+{
+	m_ChildHandle = CreateChild();
+
+	TCHAR buff[11] = { 0 };
+	wsprintf(buff, _T("0x%08x"), (int)m_ChildHandle);
+	GetDlgItem(IDC_STATIC2)->SetWindowTextW(buff);
+	if (m_ChildHandle != NULL)
+	{
+		int handle = (int)m_ChildHandle;
+		return handle;
+		//m_SharedData.Write((byte*)handle, E_MAP_CreateWindowAnswer);
+	}
+
+	return CDialogEx::OnCopyData(pWnd, pCopyDataStruct);
 }

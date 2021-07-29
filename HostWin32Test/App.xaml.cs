@@ -23,8 +23,8 @@
             (new MainView() { DataContext = new MainViewModel() }).Show();
 
             // WPF のウィンドウハンドルを Cpp へ渡す
-            var bytes = BitConverter.GetBytes(new WindowInteropHelper(this.MainWindow).Handle.ToInt32());
-            this._win32Data.Write(bytes, Win32DataMapIndexes.WindowHandle);
+            //var bytes = BitConverter.GetBytes(new WindowInteropHelper(this.MainWindow).Handle.ToInt32());
+            //this._win32Data.Write(bytes, Win32DataMapIndexes.WindowHandle);
         }
 
         protected override void OnExit(ExitEventArgs e)
