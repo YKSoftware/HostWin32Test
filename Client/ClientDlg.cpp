@@ -179,12 +179,12 @@ HWND CClientDlg::CreateChild()
 		RECT rect1 = { 0, 0, 260, 260 };
 		RECT rect2 = { 10, 10, 120, 30 };
 
-		if (m_pDummyWindow != nullptr)
+		if (m_pDummyWindow != NULL)
 		{
 			delete m_pDummyWindow;
 		}
 		m_pDummyWindow = new DummyView();
-		if (m_pButton != nullptr)
+		if (m_pButton != NULL)
 		{
 			delete m_pButton;
 		}

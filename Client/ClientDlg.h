@@ -37,8 +37,8 @@ protected:
 	bool m_HasCreateCommand = false;
 	void PolingCreateCommand();
 	HWND CreateChild();
-	DummyView* m_pDummyWindow = new DummyView();
-	CButton* m_pButton = new CButton();
+	DummyView* m_pDummyWindow;
+	CButton* m_pButton;
 
 	Win32Data m_SharedData;
 	HWND m_hWndFromWPF;
