@@ -262,6 +262,12 @@ void CClientDlg::OnBnClickedButton2()
 
 BOOL CClientDlg::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
 {
+	DWORD processId = 0;
+	DWORD threadId = GetWindowThreadProcessId(this->GetSafeHwnd(), &processId);
+	TCHAR str[50];
+	_stprintf_s(str, _T("processId = 0x%08x, threadId = 0x%08x\n"), processId, threadId);
+	::OutputDebugString(str);
+
 	m_ChildHandle = CreateChild();
 
 	TCHAR buff[11] = { 0 };

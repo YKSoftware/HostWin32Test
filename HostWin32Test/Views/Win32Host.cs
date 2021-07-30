@@ -28,10 +28,22 @@
             set { SetValue(HWndProperty, value); }
         }
 
+        [DllImport("user32.dll")]
+        public static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
+        [DllImport("user32.dll")]
+        public static extern int GetWindowThreadProcessId(HandleRef hWnd, out int lpdwProcessId);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern int GetCurrentThreadId();
+
         #region HwndHost 抽象クラスのメンバ
 
         protected override HandleRef BuildWindowCore(HandleRef hwndParent)
         {
+            int processId = 0;
+            var threadId = GetWindowThreadProcessId(hwndParent.Handle, out processId);
+
             var bytes = BitConverter.GetBytes(hwndParent.Handle.ToInt32());
             this._win32Data.Write(bytes, Win32DataMapIndexes.WindowHandle);
 
@@ -61,7 +73,10 @@
                 //Thread.Sleep(200);
             }
 
-            return new HandleRef(this, this._cppHandle);
+            var handleRef = new HandleRef(this, this._cppHandle);
+            threadId = GetWindowThreadProcessId(handleRef, out processId);
+            var currentThreadId = GetCurrentThreadId();
+            return handleRef;
         }
 
         protected override void DestroyWindowCore(HandleRef hwnd)
