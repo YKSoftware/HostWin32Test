@@ -9,25 +9,19 @@
         WindowHandle = 0,
 
         /// <summary>
-        /// Win32 へのウォッチドッグ用カウンタ
+        /// CreateWindow 相当の処理をお願いします。
         /// </summary>
         [Size(sizeof(int))]
-        WatchDogToWin32,
+        CreateWindowCommand,
 
         // ↑ WPF → Win32 書き込み用
         ///////////////////////////////////////////////////////////////////
         // ↓ WPF ← Win32 読み込み用
 
         /// <summary>
-        /// Win32 へ渡したウィンドウハンドルの確認用
+        /// CreateWindow 相当の処理をおこないました。
         /// </summary>
         [Size(sizeof(int))]
-        WindowHandleBack,
-
-        /// <summary>
-        /// Win32 からのウォッチドッグ用カウンタ
-        /// </summary>
-        [Size(sizeof(int))]
-        WatchDogFromWin32,
+        CreateWindowAnswer,
     }
 }

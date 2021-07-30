@@ -15,6 +15,7 @@
         /// </summary>
         static SharedMemory()
         {
+            // readonly フィールドの初期化
             var last = Win32DataMap.Items.Last();
             _memorySize = last.Index + last.Size;
 

@@ -3,9 +3,8 @@
 
 int Win32DataMap[E_MAP_MaxValue][2] = {
 	{ 4, 0 },			// E_MAP_WindowHandle
-	{ 4, 0 },			// E_MAP_WatchDogToWin32,
-	{ 4, 0 },			// E_MAP_WindowHandleBack
-	{ 4, 0 }			// E_MAP_WatchDogFromWin32
+	{ 4, 0 },			// E_MAP_CreateWindowCommand
+	{ 4, 0 }			// E_MAP_CreateWindowAnswer
 };
 
 #define SIZE	0
@@ -22,7 +21,7 @@ Win32Data::Win32Data()
 	}
 
 	long size = Win32DataMap[E_MAP_MaxValue - 1][INDEX] + Win32DataMap[E_MAP_MaxValue - 1][SIZE];
-	m_SharedMemory.TryInitialize(size);
+	if (m_SharedMemory.TryInitialize(size)) m_MemorySize = size;
 }
 
 // デストラクタ
@@ -30,9 +29,19 @@ Win32Data::~Win32Data()
 {
 }
 
+long Win32Data::GetTotalSize()
+{
+	return m_MemorySize;
+}
+
 int Win32Data::GetSize(Win32DataMapIndexes index)
 {
 	return Win32DataMap[index][SIZE];
+}
+
+int Win32Data::ReadToEnd(byte* bytes, int offset /*= 0*/)
+{
+	return m_SharedMemory.ReadToEnd(bytes, offset);
 }
 
 int Win32Data::Read(byte* bytes, Win32DataMapIndexes index)

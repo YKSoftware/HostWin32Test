@@ -7,6 +7,7 @@ public:
 	~SharedMemory();
 
 	bool TryInitialize(long size);
+	int ReadToEnd(byte* bytes, int offset);
 	int Read(byte* bytes, int index, int size);
 	int Write(byte* bytes, int index, int size);
 

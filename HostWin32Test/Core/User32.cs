@@ -21,6 +21,8 @@
         [DllImport("user32.dll", EntryPoint = "DestroyWindow", CharSet = CharSet.Unicode)]
         internal static extern bool DestroyWindow(IntPtr hwnd);
 
+        public const int WS_EX_LEFT = 0x00000000;
+
         public const int WS_CHILD = 0x40000000;
         public const int WS_VISIBLE = 0x10000000;
         public const int LBS_NOTIFY = 0x00000001;
