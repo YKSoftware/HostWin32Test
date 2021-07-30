@@ -10,8 +10,10 @@
            Width="800" Height="600"
            IsClosingConfirmationEnabled="False">
   <StackPanel>
-    <Button Content="Create Win32Host" Click="Button_Click" />
-    <ContentControl x:Name="win32ContentHost" Width="260" Height="260" />
+    <!--<Button Content="Create Win32Host" Click="Button_Click" />-->
+    <Button Content="Dummy Button" />
+    <vw:Win32Host Width="260" Height="260" />
+    <!--<ContentControl x:Name="win32ContentHost" Width="260" Height="260" />-->
     <Button Content="Dummy Button" />
   </StackPanel>
 </YK:Window>
