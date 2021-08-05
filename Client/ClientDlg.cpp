@@ -30,6 +30,7 @@ void CClientDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CClientDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_MESSAGE(WM_USER, &CClientDlg::OnUser)
 END_MESSAGE_MAP()
 
 
@@ -85,3 +86,21 @@ HCURSOR CClientDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+afx_msg LRESULT CClientDlg::OnUser(WPARAM wParam, LPARAM lParam)
+{
+	HWND parentHandle = (HWND)lParam;
+	CWnd* pParent = CWnd::FromHandle(parentHandle);
+
+	if (pParent != NULL)
+	{
+		if (m_pTestView != NULL)
+		{
+			delete m_pTestView;
+		}
+		m_pTestView = new TestView();
+		m_pTestView->Create(NULL, _T("TestView"), WS_CHILD | WS_VISIBLE, CRect(0, 0, 260, 260), pParent, 1);
+	}
+	return (m_pTestView == NULL) ? 0 : (LRESULT)m_pTestView->GetSafeHwnd();
+}
