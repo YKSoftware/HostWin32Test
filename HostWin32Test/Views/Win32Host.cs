@@ -59,15 +59,8 @@
             this._win32Data.Write(bytes, Win32DataMapIndexes.WindowHandle);
 
             // Cpp に CreateWindow() に相当する処理を指示する
-            //文字列メッセージを送信
-            //送信データをByte配列に格納
-            COPYDATASTRUCT cds;
-            cds.dwData = 0;        //使用しない
-            cds.lpData = "Tomosoft string";//テキストのポインターをセット
-            cds.cbData = cds.lpData.Length + 1; //長さをセット
-                                                //文字列を送る
             Int32 hWnd = FindWindow(null, "Client");
-            this._cppHandle = new IntPtr(SendMessage(hWnd, WM_COPYDATA, 0, ref cds));
+            this._cppHandle = new IntPtr(SendMessage(hWnd, WM_USER, 0, cppParenthandle.ToInt32()));
 
             var handleRef = new HandleRef(this, cppParenthandle);
             threadId = GetWindowThreadProcessId(handleRef, out processId);
