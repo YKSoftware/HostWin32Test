@@ -44,7 +44,7 @@
             int processId = 0;
             var threadId = GetWindowThreadProcessId(hwndParent.Handle, out processId);
 
-            var cppParenthandle = User32.CreateWindowEx(0, "BUTTON", "",
+            var cppParenthandle = User32.CreateWindowEx(0, "static", "",
                                                         User32.WS_CHILD | User32.WS_VISIBLE | 0x02000000 /* WS_CLIPCHILDREN */,
                                                         0, 0,
                                                         260, 260,     // コントロールサイズ確定前に通り過ぎるのでとりあえず決め打ち
