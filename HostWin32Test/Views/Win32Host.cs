@@ -22,7 +22,7 @@
         {
             if (this._cppHandle != IntPtr.Zero)
             {
-                    System.Diagnostics.Debug.WriteLine("SendMessage!!");
+                System.Diagnostics.Debug.WriteLine("SendMessage!!");
                 this._childHandle = (IntPtr)User32.SendMessage((int)this._cppHandle, WM_USER_SIZECHANGED, (int)e.NewSize.Width, (int)e.NewSize.Height);
             }
         }
