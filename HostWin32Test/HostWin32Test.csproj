@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A5B13279-273B-481E-965E-3AA184FAA91C}</ProjectGuid>
+    <ProjectGuid>{ADB2ACD2-6243-4A63-94B6-8DC26B62BFA2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HostWin32Test</RootNamespace>
@@ -50,7 +50,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="YKToolkit.Controls">
-      <HintPath>..\..\..\YKSoftware\YKToolkit.Controls\YKToolkit.Controls\bin\Beta Release\YKToolkit.Controls.dll</HintPath>
+      <HintPath>\\te22w433\開発業務\共有モジュール\WPF\YKToolkit.Controls\YKToolkit.Controls.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -58,28 +58,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Core\Extensions.cs" />
-    <Compile Include="Core\User32.cs" />
-    <Compile Include="Models\SizeAttribute.cs" />
-    <Compile Include="Models\Win32Data.cs" />
-    <Compile Include="Models\Win32DataMap.cs" />
-    <Compile Include="Models\Win32DataMapIndexes.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="Views\MainView.xaml.cs">
-      <DependentUpon>MainView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="Views\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Win32Host.cs" />
-    <Page Include="Views\MainView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\SharedMemory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -105,6 +94,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

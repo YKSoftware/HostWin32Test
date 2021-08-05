@@ -1,8 +1,12 @@
-﻿namespace HostWin32Test.ViewModels
-{
-    using YKToolkit.Bindings;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-    public class MainViewModel : NotificationObject
+namespace HostWin32Test.ViewModels
+{
+    class MainViewModel
     {
     }
 }

@@ -8,12 +8,19 @@
            mc:Ignorable="d"
            Title="MainView"
            Width="800" Height="600"
-           IsClosingConfirmationEnabled="False">
-  <StackPanel>
-    <!--<Button Content="Create Win32Host" Click="Button_Click" />-->
-    <Button Content="Dummy Button" />
-    <vw:Win32Host Width="260" Height="260" />
-    <!--<ContentControl x:Name="win32ContentHost" Width="260" Height="260" />-->
-    <Button Content="Dummy Button" />
-  </StackPanel>
+           IsClosingConfirmationEnabled="False"
+           WindowStartupLocation="CenterScreen">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Button Content="Dummy" />
+
+    <vw:Win32Host Grid.Row="1" />
+
+    <Button Grid.Row="2" Content="Dummy" />
+  </Grid>
 </YK:Window>

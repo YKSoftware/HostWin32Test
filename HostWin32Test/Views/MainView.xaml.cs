@@ -1,6 +1,5 @@
 ﻿namespace HostWin32Test.Views
 {
-    using System;
     using YKToolkit.Controls;
 
     /// <summary>
@@ -12,11 +11,5 @@
         {
             InitializeComponent();
         }
-
-        //private async void Button_Click(object sender, System.Windows.RoutedEventArgs e)
-        //{
-        //    var win32Host = await (App.Current as App).CreateWin32ControlAsync();
-        //    this.win32ContentHost.Content = win32Host;
-        //}
     }
 }
