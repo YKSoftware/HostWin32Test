@@ -44,7 +44,18 @@
             int processId = 0;
             var threadId = GetWindowThreadProcessId(hwndParent.Handle, out processId);
 
-            var bytes = BitConverter.GetBytes(hwndParent.Handle.ToInt32());
+            var cppParenthandle = User32.CreateWindowEx(0, "BUTTON", "",
+                                                        User32.WS_CHILD | User32.WS_VISIBLE | 0x02000000 /* WS_CLIPCHILDREN */,
+                                                        0, 0,
+                                                        260, 260,     // コントロールサイズ確定前に通り過ぎるのでとりあえず決め打ち
+                                                                      // HwndHost を継承するんじゃなくてメンバとして保持すれば
+                                                                      // new するタイミングを任意にできて拡張しやすいかも
+                                                        hwndParent.Handle,
+                                                        (IntPtr)User32.HOST_ID,
+                                                        IntPtr.Zero,
+                                                        0);
+            //var bytes = BitConverter.GetBytes(hwndParent.Handle.ToInt32());
+            var bytes = BitConverter.GetBytes(cppParenthandle.ToInt32());
             this._win32Data.Write(bytes, Win32DataMapIndexes.WindowHandle);
 
             // Cpp に CreateWindow() に相当する処理を指示する
@@ -58,22 +69,7 @@
             Int32 hWnd = FindWindow(null, "Client");
             this._cppHandle = new IntPtr(SendMessage(hWnd, WM_COPYDATA, 0, ref cds));
 
-
-            // Cpp からウィンドウハンドルをもらう
-            //while (true)
-            {
-                //var answer = BitConverter.ToInt32(this._win32Data.Read(Win32DataMapIndexes.CreateWindowAnswer).ToArray(), 0);
-                //if (answer != 0)
-                {
-                    //this._cppHandle = new IntPtr(answer);
-                    // Cpp への指示を取り下げる
-                    this._win32Data.Write(BitConverter.GetBytes((int)0), Win32DataMapIndexes.CreateWindowCommand);
-                    //break;
-                }
-                //Thread.Sleep(200);
-            }
-
-            var handleRef = new HandleRef(this, this._cppHandle);
+            var handleRef = new HandleRef(this, cppParenthandle);
             threadId = GetWindowThreadProcessId(handleRef, out processId);
             var currentThreadId = GetCurrentThreadId();
             return handleRef;
