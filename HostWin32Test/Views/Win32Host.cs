@@ -2,11 +2,31 @@
 {
     using System;
     using System.Runtime.InteropServices;
+    using System.Windows;
     using System.Windows.Interop;
     using YKToolkit.Controls;
 
     public class Win32Host : HwndHost
     {
+        public Win32Host()
+        {
+            this._cppHandle = (IntPtr)User32.FindWindow(null, "Client");
+
+            if (this._cppHandle != IntPtr.Zero)
+            {
+                this.SizeChanged += OnSizeChanged;
+            }
+        }
+
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (this._cppHandle != IntPtr.Zero)
+            {
+                    System.Diagnostics.Debug.WriteLine("SendMessage!!");
+                this._childHandle = (IntPtr)User32.SendMessage((int)this._cppHandle, WM_USER_SIZECHANGED, (int)e.NewSize.Width, (int)e.NewSize.Height);
+            }
+        }
+
         protected override HandleRef BuildWindowCore(HandleRef hwndParent)
         {
             this._wpfHandle = hwndParent.Handle;
@@ -24,8 +44,10 @@
                 IntPtr.Zero
                 );
 
-            var cppHandle = User32.FindWindow(null, "Client");
-            this._childHandle = (IntPtr)User32.SendMessage(cppHandle, (int)User32.WMs.WM_USER, 0, (int)cppHostHandle);
+            if (this._cppHandle != IntPtr.Zero)
+            {
+                this._childHandle = (IntPtr)User32.SendMessage((int)this._cppHandle, (int)User32.WMs.WM_USER, 0, (int)cppHostHandle);
+            }
 
             return new HandleRef(this, cppHostHandle);
         }
@@ -52,11 +74,13 @@
         }
 
         private IntPtr _wpfHandle;
+        private IntPtr _cppHandle;
         private IntPtr _childHandle;
 
         private const int ID = 1;
         private const string UNKNOWN = "Unknown";
         private const string WPF_HOST = "WPF Host";
         private const string CPP_HOST = "Cpp Host";
+        private readonly int WM_USER_SIZECHANGED = (int)User32.WMs.WM_USER + 1;
     }
 }

@@ -10,8 +10,12 @@ class TestView : public CWnd
 public:
 	TestView();
 	virtual ~TestView();
+	BOOL Create(CWnd* pParent);
+	void ChangeSize(int width, int height);
 
 protected:
+	int m_Width = 160;
+	int m_Height = 120;
 	CButton m_pButton;
 
 protected:

@@ -17,6 +17,19 @@ TestView::~TestView()
 {
 }
 
+BOOL TestView::Create(CWnd* pParent)
+{
+	return CWnd::Create(NULL, _T("TestView"), WS_CHILD | WS_VISIBLE, CRect(0, 0, m_Width, m_Height), pParent, 1);
+}
+
+void TestView::ChangeSize(int width, int height)
+{
+	::OutputDebugStringW(_T("ChangeSize()\n"));
+	m_Width = width;
+	m_Height = height;
+	SetWindowPos(NULL, 0, 0, m_Width, m_Height, SWP_NOMOVE | SWP_NOZORDER);
+}
+
 BEGIN_MESSAGE_MAP(TestView, CWnd)
 	ON_WM_PAINT()
 	ON_WM_SIZE()
@@ -40,7 +53,7 @@ void TestView::OnPaint()
 	CBrush brush(RGB(255, 255, 255));
 	CBrush* pOldBrush = pDC->SelectObject(&brush);
 
-	pDC->Rectangle(0, 0, 260, 260);
+	pDC->Rectangle(0, 0, m_Width, m_Height);
 
 	pDC->SelectObject(pOldBrush);
 	pDC->SelectObject(pOldPen);

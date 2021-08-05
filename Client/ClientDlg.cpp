@@ -14,7 +14,7 @@
 
 // CClientDlg ダイアログ
 
-
+#define WM_USER_SIZECHANGED		WM_USER+1
 
 CClientDlg::CClientDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_CLIENT_DIALOG, pParent)
@@ -31,6 +31,7 @@ BEGIN_MESSAGE_MAP(CClientDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_MESSAGE(WM_USER, &CClientDlg::OnUser)
+	ON_MESSAGE(WM_USER_SIZECHANGED, &CClientDlg::OnUserSizechanged)
 END_MESSAGE_MAP()
 
 
@@ -100,7 +101,20 @@ afx_msg LRESULT CClientDlg::OnUser(WPARAM wParam, LPARAM lParam)
 			delete m_pTestView;
 		}
 		m_pTestView = new TestView();
-		m_pTestView->Create(NULL, _T("TestView"), WS_CHILD | WS_VISIBLE, CRect(0, 0, 260, 260), pParent, 1);
+		m_pTestView->Create(pParent);
 	}
 	return (m_pTestView == NULL) ? 0 : (LRESULT)m_pTestView->GetSafeHwnd();
+}
+
+
+afx_msg LRESULT CClientDlg::OnUserSizechanged(WPARAM wParam, LPARAM lParam)
+{
+	int width = (int)wParam;
+	int height = (int)lParam;
+	if (m_pTestView != NULL)
+	{
+		m_pTestView->ChangeSize(width, height);
+	}
+
+	return 0;
 }
