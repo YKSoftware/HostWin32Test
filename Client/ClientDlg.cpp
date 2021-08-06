@@ -98,25 +98,37 @@ afx_msg LRESULT CClientDlg::OnUser(WPARAM wParam, LPARAM lParam)
 
 	if (pParent != NULL)
 	{
-		if (m_pTestView != NULL)
+		for (size_t i = 0; i < m_pTestViews.size(); ++i)
 		{
-			delete m_pTestView;
+			if (m_pTestViews[i]->GetParentHwnd() == parentHandle)
+			{
+				// Šù‚É“¯‚¶e‚É‘Î‚µ‚Ä•`‰æ‚µ‚Ä‚¢‚é‚à‚Ì‚ª‘¶Ý‚·‚éê‡‚Í‚»‚ê‚Æ“ü‚ê‘Ö‚¦‚é
+				m_pTestViews[i]->DestroyWindow();
+				delete m_pTestViews[i];
+				m_pTestViews[i] = new TestView();
+				m_pTestViews[i]->Create(pParent);
+				return (LRESULT)m_pTestViews[i]->GetSafeHwnd();
+			}
 		}
-		m_pTestView = new TestView();
-		m_pTestView->Create(pParent);
+		// V‹K‚Éì¬‚·‚é
+		TestView* pView = new TestView();
+		pView->Create(pParent);
+		m_pTestViews.push_back(pView);
+		return (LRESULT)pView->GetSafeHwnd();
 	}
-	return (m_pTestView == NULL) ? 0 : (LRESULT)m_pTestView->GetSafeHwnd();
+
+	return 0;
 }
 
 
 afx_msg LRESULT CClientDlg::OnUserSizechanged(WPARAM wParam, LPARAM lParam)
 {
-	int width = (int)wParam;
-	int height = (int)lParam;
-	if (m_pTestView != NULL)
-	{
-		m_pTestView->ChangeSize(width, height);
-	}
+	//int width = (int)wParam;
+	//int height = (int)lParam;
+	//if (m_pTestView != NULL)
+	//{
+	//	m_pTestView->ChangeSize(width, height);
+	//}
 
 	return 0;
 }
@@ -124,13 +136,14 @@ afx_msg LRESULT CClientDlg::OnUserSizechanged(WPARAM wParam, LPARAM lParam)
 
 afx_msg LRESULT CClientDlg::OnUserDestroy(WPARAM wParam, LPARAM lParam)
 {
-	if (m_pTestView != NULL)
+	for (size_t i = 0; i < m_pTestViews.size(); ++i)
 	{
-		if (m_pTestView->GetParentHwnd() == (HWND)lParam)
+		if (m_pTestViews[i]->GetParentHwnd() == (HWND)lParam)
 		{
-			m_pTestView->DestroyWindow();
-			delete m_pTestView;
-			m_pTestView = NULL;
+			m_pTestViews[i]->DestroyWindow();
+			delete m_pTestViews[i];
+			m_pTestViews.erase(m_pTestViews.begin() + i);
+			break;
 		}
 	}
 
