@@ -72,6 +72,11 @@
                 case (int)User32.WMs.WM_PAINT:
                     System.Diagnostics.Debug.WriteLine($"[{targetName}] WM_PAINT");
                     break;
+
+                //case (int)User32.WMs.WM_DESTROY:
+                    // ここに入る前に DestroyWindowCore() メソッドが実行されて HwndHost 内部はすべて Dispose() されるので
+                    // ここには一生入ってきません。
+                    //break;
             }
 
             return base.WndProc(hwnd, msg, wParam, lParam, ref handled);
