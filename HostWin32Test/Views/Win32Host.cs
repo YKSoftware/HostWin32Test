@@ -23,7 +23,7 @@
             if (this._cppHandle != IntPtr.Zero)
             {
                 System.Diagnostics.Debug.WriteLine("SendMessage!!");
-                this._childHandle = (IntPtr)User32.SendMessage((int)this._cppHandle, WM_USER_SIZECHANGED, (int)e.NewSize.Width, (int)e.NewSize.Height);
+                this._childHandle = (IntPtr)User32.SendMessage((int)this._cppHandle, (int)WMs.WM_USER_SIZECHANGED, (int)e.NewSize.Width, (int)e.NewSize.Height);
             }
         }
 
@@ -81,6 +81,16 @@
         private const string UNKNOWN = "Unknown";
         private const string WPF_HOST = "WPF Host";
         private const string CPP_HOST = "Cpp Host";
-        private readonly int WM_USER_SIZECHANGED = (int)User32.WMs.WM_USER + 1;
+
+        /// <summary>
+        /// Cpp 側に伝えるメッセージを表します。
+        /// </summary>
+        private enum WMs : int
+        {
+            /// <summary>
+            /// サイズ変更
+            /// </summary>
+            WM_USER_SIZECHANGED = (int)User32.WMs.WM_USER + 1,
+        }
     }
 }
