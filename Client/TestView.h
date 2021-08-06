@@ -12,8 +12,10 @@ public:
 	virtual ~TestView();
 	BOOL Create(CWnd* pParent);
 	void ChangeSize(int width, int height);
+	HWND GetParentHwnd();
 
 protected:
+	HWND m_ParentHwnd;
 	int m_Width = 160;
 	int m_Height = 120;
 	CButton m_pButton;
@@ -26,6 +28,7 @@ public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnBnClicked();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnDestroy();
 };
 
 

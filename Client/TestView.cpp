@@ -17,8 +17,14 @@ TestView::~TestView()
 {
 }
 
+HWND TestView::GetParentHwnd()
+{
+	return m_ParentHwnd;
+}
+
 BOOL TestView::Create(CWnd* pParent)
 {
+	m_ParentHwnd = pParent->GetSafeHwnd();
 	return CWnd::Create(NULL, _T("TestView"), WS_CHILD | WS_VISIBLE, CRect(0, 0, m_Width, m_Height), pParent, 1);
 }
 
@@ -36,6 +42,7 @@ BEGIN_MESSAGE_MAP(TestView, CWnd)
 	ON_WM_CREATE()
 	ON_BN_CLICKED(1001, &TestView::OnBnClicked)
 	ON_WM_LBUTTONDOWN()
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 void TestView::OnPaint()
@@ -88,4 +95,11 @@ void TestView::OnLButtonDown(UINT nFlags, CPoint point)
 	::OutputDebugStringW(_T("OnLButtonDown()\n"));
 
 	CWnd::OnLButtonDown(nFlags, point);
+}
+
+
+void TestView::OnDestroy()
+{
+	::OutputDebugStringW(_T("TestView::OnDestroy()\n"));
+	CWnd::OnDestroy();
 }

@@ -31,7 +31,7 @@
         {
             this._wpfHandle = hwndParent.Handle;
 
-            var cppHostHandle = User32.CreateWindowEx(
+            this._cppHostHandle = User32.CreateWindowEx(
                 (int)User32.WSs.WS_EX_LEFT,
                 "static",
                 "",
@@ -46,15 +46,19 @@
 
             if (this._cppHandle != IntPtr.Zero)
             {
-                this._childHandle = (IntPtr)User32.SendMessage((int)this._cppHandle, (int)User32.WMs.WM_USER, 0, (int)cppHostHandle);
+                this._childHandle = (IntPtr)User32.SendMessage((int)this._cppHandle, (int)User32.WMs.WM_USER, 0, (int)this._cppHostHandle);
             }
 
-            return new HandleRef(this, cppHostHandle);
+            return new HandleRef(this, this._cppHostHandle);
         }
 
         protected override void DestroyWindowCore(HandleRef hwnd)
         {
             User32.DestroyWindow(hwnd.Handle);
+            if (this._cppHandle != IntPtr.Zero)
+            {
+                User32.SendMessage((int)this._cppHandle, (int)WMs.WM_USER_DESTROY, 0, (int)this._cppHostHandle);
+            }
         }
 
         protected override IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -74,6 +78,7 @@
         }
 
         private IntPtr _wpfHandle;
+        private IntPtr _cppHostHandle;
         private IntPtr _cppHandle;
         private IntPtr _childHandle;
 
@@ -91,6 +96,11 @@
             /// サイズ変更
             /// </summary>
             WM_USER_SIZECHANGED = (int)User32.WMs.WM_USER + 1,
+
+            /// <summary>
+            /// ウィンドウ破棄
+            /// </summary>
+            WM_USER_DESTROY,
         }
     }
 }
