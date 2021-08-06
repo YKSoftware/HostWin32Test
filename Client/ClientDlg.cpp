@@ -6,6 +6,7 @@
 #include "Client.h"
 #include "ClientDlg.h"
 #include "afxdialogex.h"
+#include "define.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -13,9 +14,6 @@
 
 
 // CClientDlg ダイアログ
-
-#define WM_USER_SIZECHANGED		WM_USER+1
-#define WM_USER_DESTROY			WM_USER+2
 
 CClientDlg::CClientDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_CLIENT_DIALOG, pParent)
@@ -32,7 +30,6 @@ BEGIN_MESSAGE_MAP(CClientDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_MESSAGE(WM_USER, &CClientDlg::OnUser)
-	ON_MESSAGE(WM_USER_SIZECHANGED, &CClientDlg::OnUserSizechanged)
 	ON_MESSAGE(WM_USER_DESTROY, &CClientDlg::OnUserDestroy)
 END_MESSAGE_MAP()
 
@@ -98,39 +95,40 @@ afx_msg LRESULT CClientDlg::OnUser(WPARAM wParam, LPARAM lParam)
 
 	if (pParent != NULL)
 	{
-		if (m_pTestView != NULL)
+		for (size_t i = 0; i < m_pTestViews.size(); ++i)
 		{
-			delete m_pTestView;
+			if (m_pTestViews[i]->GetParentHwnd() == parentHandle)
+			{
+				// 既に同じ親に対して描画しているものが存在する場合はそれと入れ替える
+				m_pTestViews[i]->DestroyWindow();
+				delete m_pTestViews[i];
+				m_pTestViews[i] = new TestView();
+				m_pTestViews[i]->Create(pParent);
+				return (LRESULT)m_pTestViews[i]->GetSafeHwnd();
+			}
 		}
-		m_pTestView = new TestView();
-		m_pTestView->Create(pParent);
-	}
-	return (m_pTestView == NULL) ? 0 : (LRESULT)m_pTestView->GetSafeHwnd();
-}
-
-
-afx_msg LRESULT CClientDlg::OnUserSizechanged(WPARAM wParam, LPARAM lParam)
-{
-	int width = (int)wParam;
-	int height = (int)lParam;
-	if (m_pTestView != NULL)
-	{
-		m_pTestView->ChangeSize(width, height);
+		// 新規に作成する
+		TestView* pView = new TestView();
+		pView->Create(pParent);
+		m_pTestViews.push_back(pView);
+		return (LRESULT)pView->GetSafeHwnd();
 	}
 
 	return 0;
 }
 
-
 afx_msg LRESULT CClientDlg::OnUserDestroy(WPARAM wParam, LPARAM lParam)
 {
-	if (m_pTestView != NULL)
+	::OutputDebugStringW(_T("CClientDlg::OnUserDestroy()\n"));
+
+	for (size_t i = 0; i < m_pTestViews.size(); ++i)
 	{
-		if (m_pTestView->GetParentHwnd() == (HWND)lParam)
+		if (m_pTestViews[i]->GetParentHwnd() == (HWND)lParam)
 		{
-			m_pTestView->DestroyWindow();
-			delete m_pTestView;
-			m_pTestView = NULL;
+			m_pTestViews[i]->DestroyWindow();
+			delete m_pTestViews[i];
+			m_pTestViews.erase(m_pTestViews.begin() + i);
+			break;
 		}
 	}
 

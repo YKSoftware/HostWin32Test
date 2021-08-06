@@ -3,7 +3,10 @@
 //
 
 #pragma once
+#include <vector>
 #include "TestView.h"
+
+using namespace std;
 
 // CClientDlg ダイアログ
 class CClientDlg : public CDialogEx
@@ -24,7 +27,7 @@ public:
 // 実装
 protected:
 	HICON m_hIcon;
-	TestView* m_pTestView;
+	vector<TestView*> m_pTestViews;
 
 	// 生成された、メッセージ割り当て関数
 	virtual BOOL OnInitDialog();
@@ -32,6 +35,5 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 	afx_msg LRESULT OnUser(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnUserSizechanged(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnUserDestroy(WPARAM wParam, LPARAM lParam);
 };
