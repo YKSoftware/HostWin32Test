@@ -11,10 +11,12 @@ IMPLEMENT_DYNAMIC(TestView, CWnd)
 
 TestView::TestView()
 {
+	::OutputDebugStringW(_T("TestView コンストラクタ\n"));
 }
 
 TestView::~TestView()
 {
+	::OutputDebugStringW(_T("TestView デストラクタ\n"));
 }
 
 HWND TestView::GetParentHwnd()
@@ -30,7 +32,7 @@ BOOL TestView::Create(CWnd* pParent)
 
 void TestView::ChangeSize(int width, int height)
 {
-	::OutputDebugStringW(_T("ChangeSize()\n"));
+	::OutputDebugStringW(_T("TestView::ChangeSize()\n"));
 	m_Width = width;
 	m_Height = height;
 	SetWindowPos(NULL, 0, 0, m_Width, m_Height, SWP_NOMOVE | SWP_NOZORDER);
@@ -47,7 +49,7 @@ END_MESSAGE_MAP()
 
 void TestView::OnPaint()
 {
-	::OutputDebugStringW(_T("OnPaint()\n"));
+	::OutputDebugStringW(_T("TestView::OnPaint()\n"));
 
 	CPaintDC DC(this);
 
@@ -69,7 +71,7 @@ void TestView::OnPaint()
 
 void TestView::OnSize(UINT nType, int cx, int cy)
 {
-	::OutputDebugStringW(_T("OnSize()\n"));
+	::OutputDebugStringW(_T("TestView::OnSize()\n"));
 	CWnd::OnSize(nType, cx, cy);
 }
 
@@ -86,14 +88,13 @@ int TestView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void TestView::OnBnClicked()
 {
-	::OutputDebugStringW(_T("ボタンが押されました。\n"));
+	::OutputDebugStringW(_T("TestView::ボタンが押されました。\n"));
 }
 
 
 void TestView::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	::OutputDebugStringW(_T("OnLButtonDown()\n"));
-
+	::OutputDebugStringW(_T("TestView::OnLButtonDown()\n"));
 	CWnd::OnLButtonDown(nFlags, point);
 }
 
