@@ -22,8 +22,8 @@
         {
             if (this._cppHandle != IntPtr.Zero)
             {
-                    System.Diagnostics.Debug.WriteLine("SendMessage!!");
-                this._childHandle = (IntPtr)User32.SendMessage((int)this._cppHandle, WM_USER_SIZECHANGED, (int)e.NewSize.Width, (int)e.NewSize.Height);
+                System.Diagnostics.Debug.WriteLine("SendMessage!!");
+                this._childHandle = (IntPtr)User32.SendMessage((int)this._cppHandle, (int)WMs.WM_USER_SIZECHANGED, (int)e.NewSize.Width, (int)e.NewSize.Height);
             }
         }
 
@@ -31,7 +31,7 @@
         {
             this._wpfHandle = hwndParent.Handle;
 
-            var cppHostHandle = User32.CreateWindowEx(
+            this._cppHostHandle = User32.CreateWindowEx(
                 (int)User32.WSs.WS_EX_LEFT,
                 "static",
                 "",
@@ -46,15 +46,19 @@
 
             if (this._cppHandle != IntPtr.Zero)
             {
-                this._childHandle = (IntPtr)User32.SendMessage((int)this._cppHandle, (int)User32.WMs.WM_USER, 0, (int)cppHostHandle);
+                this._childHandle = (IntPtr)User32.SendMessage((int)this._cppHandle, (int)User32.WMs.WM_USER, 0, (int)this._cppHostHandle);
             }
 
-            return new HandleRef(this, cppHostHandle);
+            return new HandleRef(this, this._cppHostHandle);
         }
 
         protected override void DestroyWindowCore(HandleRef hwnd)
         {
             User32.DestroyWindow(hwnd.Handle);
+            if (this._cppHandle != IntPtr.Zero)
+            {
+                User32.SendMessage((int)this._cppHandle, (int)WMs.WM_USER_DESTROY, 0, (int)this._cppHostHandle);
+            }
         }
 
         protected override IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -68,12 +72,18 @@
                 case (int)User32.WMs.WM_PAINT:
                     System.Diagnostics.Debug.WriteLine($"[{targetName}] WM_PAINT");
                     break;
+
+                //case (int)User32.WMs.WM_DESTROY:
+                    // ここに入る前に DestroyWindowCore() メソッドが実行されて HwndHost 内部はすべて Dispose() されるので
+                    // ここには一生入ってきません。
+                    //break;
             }
 
             return base.WndProc(hwnd, msg, wParam, lParam, ref handled);
         }
 
         private IntPtr _wpfHandle;
+        private IntPtr _cppHostHandle;
         private IntPtr _cppHandle;
         private IntPtr _childHandle;
 
@@ -81,6 +91,21 @@
         private const string UNKNOWN = "Unknown";
         private const string WPF_HOST = "WPF Host";
         private const string CPP_HOST = "Cpp Host";
-        private readonly int WM_USER_SIZECHANGED = (int)User32.WMs.WM_USER + 1;
+
+        /// <summary>
+        /// Cpp 側に伝えるメッセージを表します。
+        /// </summary>
+        private enum WMs : int
+        {
+            /// <summary>
+            /// サイズ変更
+            /// </summary>
+            WM_USER_SIZECHANGED = (int)User32.WMs.WM_USER + 1,
+
+            /// <summary>
+            /// ウィンドウ破棄
+            /// </summary>
+            WM_USER_DESTROY,
+        }
     }
 }
