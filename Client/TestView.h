@@ -11,7 +11,6 @@ public:
 	TestView();
 	virtual ~TestView();
 	BOOL Create(CWnd* pParent);
-	void ChangeSize(int width, int height);
 	HWND GetParentHwnd();
 
 protected:
@@ -29,6 +28,8 @@ public:
 	afx_msg void OnBnClicked();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnDestroy();
+protected:
+	afx_msg LRESULT OnUserSizechanged(WPARAM wParam, LPARAM lParam);
 };
 
 

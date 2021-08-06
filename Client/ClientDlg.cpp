@@ -6,6 +6,7 @@
 #include "Client.h"
 #include "ClientDlg.h"
 #include "afxdialogex.h"
+#include "define.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -13,9 +14,6 @@
 
 
 // CClientDlg ダイアログ
-
-#define WM_USER_SIZECHANGED		WM_USER+1
-#define WM_USER_DESTROY			WM_USER+2
 
 CClientDlg::CClientDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_CLIENT_DIALOG, pParent)
@@ -32,7 +30,6 @@ BEGIN_MESSAGE_MAP(CClientDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_MESSAGE(WM_USER, &CClientDlg::OnUser)
-	ON_MESSAGE(WM_USER_SIZECHANGED, &CClientDlg::OnUserSizechanged)
 	ON_MESSAGE(WM_USER_DESTROY, &CClientDlg::OnUserDestroy)
 END_MESSAGE_MAP()
 
@@ -120,22 +117,10 @@ afx_msg LRESULT CClientDlg::OnUser(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-
-afx_msg LRESULT CClientDlg::OnUserSizechanged(WPARAM wParam, LPARAM lParam)
-{
-	//int width = (int)wParam;
-	//int height = (int)lParam;
-	//if (m_pTestView != NULL)
-	//{
-	//	m_pTestView->ChangeSize(width, height);
-	//}
-
-	return 0;
-}
-
-
 afx_msg LRESULT CClientDlg::OnUserDestroy(WPARAM wParam, LPARAM lParam)
 {
+	::OutputDebugStringW(_T("CClientDlg::OnUserDestroy()\n"));
+
 	for (size_t i = 0; i < m_pTestViews.size(); ++i)
 	{
 		if (m_pTestViews[i]->GetParentHwnd() == (HWND)lParam)

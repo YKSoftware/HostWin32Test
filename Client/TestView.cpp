@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "Client.h"
 #include "TestView.h"
+#include "define.h"
 
 // TestView
 
@@ -30,14 +31,6 @@ BOOL TestView::Create(CWnd* pParent)
 	return CWnd::Create(NULL, _T("TestView"), WS_CHILD | WS_VISIBLE, CRect(0, 0, m_Width, m_Height), pParent, 1);
 }
 
-void TestView::ChangeSize(int width, int height)
-{
-	::OutputDebugStringW(_T("TestView::ChangeSize()\n"));
-	m_Width = width;
-	m_Height = height;
-	SetWindowPos(NULL, 0, 0, m_Width, m_Height, SWP_NOMOVE | SWP_NOZORDER);
-}
-
 BEGIN_MESSAGE_MAP(TestView, CWnd)
 	ON_WM_PAINT()
 	ON_WM_SIZE()
@@ -45,6 +38,7 @@ BEGIN_MESSAGE_MAP(TestView, CWnd)
 	ON_BN_CLICKED(1001, &TestView::OnBnClicked)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_DESTROY()
+	ON_MESSAGE(WM_USER_SIZECHANGED, &TestView::OnUserSizechanged)
 END_MESSAGE_MAP()
 
 void TestView::OnPaint()
@@ -103,4 +97,18 @@ void TestView::OnDestroy()
 {
 	::OutputDebugStringW(_T("TestView::OnDestroy()\n"));
 	CWnd::OnDestroy();
+}
+
+
+afx_msg LRESULT TestView::OnUserSizechanged(WPARAM wParam, LPARAM lParam)
+{
+	::OutputDebugStringW(_T("TestView::OnUserSizechanged()\n"));
+
+	int width = (int)wParam;
+	int height = (int)lParam;
+	m_Width = width;
+	m_Height = height;
+	SetWindowPos(NULL, 0, 0, m_Width, m_Height, SWP_NOMOVE | SWP_NOZORDER);
+
+	return 0;
 }

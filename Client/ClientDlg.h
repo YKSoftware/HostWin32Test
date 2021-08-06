@@ -35,6 +35,5 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 	afx_msg LRESULT OnUser(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnUserSizechanged(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnUserDestroy(WPARAM wParam, LPARAM lParam);
 };

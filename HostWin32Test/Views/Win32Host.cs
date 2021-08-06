@@ -20,10 +20,10 @@
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (this._cppHandle != IntPtr.Zero)
+            if (this._childHandle != IntPtr.Zero)
             {
                 System.Diagnostics.Debug.WriteLine("SendMessage!!");
-                this._childHandle = (IntPtr)User32.SendMessage((int)this._cppHandle, (int)WMs.WM_USER_SIZECHANGED, (int)e.NewSize.Width, (int)e.NewSize.Height);
+                User32.SendMessage((int)this._childHandle, (int)WMs.WM_USER_SIZECHANGED, (int)e.NewSize.Width, (int)e.NewSize.Height);
             }
         }
 
