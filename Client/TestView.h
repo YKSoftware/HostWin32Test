@@ -17,7 +17,9 @@ protected:
 	HWND m_ParentHwnd;
 	int m_Width = 160;
 	int m_Height = 120;
-	CButton m_pButton;
+	int m_Value = 0;
+	CButton m_Button;
+	CStatic m_Static;
 
 protected:
 	DECLARE_MESSAGE_MAP()
@@ -30,6 +32,7 @@ public:
 	afx_msg void OnDestroy();
 protected:
 	afx_msg LRESULT OnUserSizechanged(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnUserValuechanged(WPARAM wParam, LPARAM lParam);
 };
 
 

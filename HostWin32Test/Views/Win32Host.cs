@@ -8,6 +8,27 @@
 
     public class Win32Host : HwndHost
     {
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(int), typeof(Win32Host), new UIPropertyMetadata(0, OnValuePropertyChanged));
+
+        public int Value
+        {
+            get { return (int)GetValue(ValueProperty); }
+            set { SetValue(ValueProperty, value); }
+        }
+
+        private static void OnValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as Win32Host).NotifyValuePropertyChanged();
+        }
+
+        private void NotifyValuePropertyChanged()
+        {
+            if (this._childHandle != IntPtr.Zero)
+            {
+                User32.SendMessage((int)this._childHandle, (int)WMs.WM_USER_VALUECHANGED, 0, this.Value);
+            }
+        }
+
         public Win32Host()
         {
             this._cppHandle = (IntPtr)User32.FindWindow(null, "Client");
@@ -106,6 +127,11 @@
             /// ウィンドウ破棄
             /// </summary>
             WM_USER_DESTROY,
+
+            /// <summary>
+            /// 値変更
+            /// </summary>
+            WM_USER_VALUECHANGED,
         }
     }
 }

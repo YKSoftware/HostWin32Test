@@ -22,7 +22,8 @@
         /// </summary>
         private void Add()
         {
-            this.Values.Add(this.Values.Count);
+            ++this._counter;
+            this.Values.Add(this._counter);
         }
 
         /// <summary>
@@ -48,5 +49,10 @@
         /// 値コレクションを取得します。
         /// </summary>
         public ObservableCollection<int> Values { get; private set; } = new ObservableCollection<int>();
+
+        /// <summary>
+        /// 追加した回数をカウント
+        /// </summary>
+        private int _counter;
     }
 }
