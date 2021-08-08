@@ -3,7 +3,7 @@
 ###############################################################################
 * text=auto
 
-*.rc text diff
+*.rc working-tree-encoding=UTF-16LE-BOM eol=CRLF
 
 ###############################################################################
 # Set default behavior for command prompt diff.
