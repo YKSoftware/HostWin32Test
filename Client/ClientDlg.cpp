@@ -21,6 +21,18 @@ CClientDlg::CClientDlg(CWnd* pParent /*=NULL*/)
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
+CClientDlg::~CClientDlg()
+{
+	for (size_t i = 0; i < m_pTestViews.size(); ++i)
+	{
+		if (m_pTestViews[i] != NULL)
+		{
+			m_pTestViews[i]->DestroyWindow();
+			delete m_pTestViews[i];
+		}
+	}
+}
+
 void CClientDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);

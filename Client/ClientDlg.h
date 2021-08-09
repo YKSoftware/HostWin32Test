@@ -14,6 +14,7 @@ class CClientDlg : public CDialogEx
 // コンストラクション
 public:
 	CClientDlg(CWnd* pParent = NULL);	// 標準コンストラクター
+	~CClientDlg();
 
 // ダイアログ データ
 #ifdef AFX_DESIGN_TIME
