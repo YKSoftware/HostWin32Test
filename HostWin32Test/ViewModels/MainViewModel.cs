@@ -1,6 +1,7 @@
 ﻿namespace HostWin32Test.ViewModels
 {
-    using System.Collections.ObjectModel;
+    using System.Collections.Generic;
+    using System.Linq;
     using YKToolkit.Bindings;
 
     /// <summary>
@@ -23,7 +24,9 @@
         private void Add()
         {
             ++this._counter;
-            this.Values.Add(this._counter);
+            this._allValues.Add(this._counter);
+            VerifyTopIndex();
+            RaisePropertyChanged(nameof(this.MaximumIndex));
         }
 
         /// <summary>
@@ -31,8 +34,32 @@
         /// </summary>
         private void Remove()
         {
-            if (this.Values.Count > 0)
-                this.Values.RemoveAt(this.Values.Count - 1);
+            if (this._allValues.Count > 0)
+                this._allValues.RemoveAt(this._allValues.Count - 1);
+            VerifyTopIndex();
+            RaisePropertyChanged(nameof(this.MaximumIndex));
+        }
+
+        /// <summary>
+        /// 先頭インデックスを正しく設定します。
+        /// </summary>
+        private void VerifyTopIndex()
+        {
+            if (this.TopIndex >= this._allValues.Count)
+                this.TopIndex = this._allValues.Count - 1;
+            else if (this.TopIndex < 0)
+                this.TopIndex = 0;
+
+            if ((this.TopIndex - this._allValues.Count) < 2)
+                UpdateValues();
+        }
+
+        /// <summary>
+        /// 表示用値コレクションを更新します。
+        /// </summary>
+        private void UpdateValues()
+        {
+            this.Values = this._allValues.Skip(this.TopIndex).Take(2).ToArray();
         }
 
         /// <summary>
@@ -45,14 +72,51 @@
         /// </summary>
         public DelegateCommand RemoveCommand { get; private set; }
 
+        private int[] _values = new int[0];
         /// <summary>
         /// 値コレクションを取得します。
         /// </summary>
-        public ObservableCollection<int> Values { get; private set; } = new ObservableCollection<int>();
+        public int[] Values
+        {
+            get { return this._values; }
+            private set
+            {
+                if (SetProperty(ref this._values, value))
+                {
+                    RaisePropertyChanged(nameof(this.MaximumIndex));
+                }
+            }
+        }
+
+        private int _topIndex;
+        /// <summary>
+        /// 現在の先頭インデックスを取得または設定します。
+        /// </summary>
+        public int TopIndex
+        {
+            get { return this._topIndex; }
+            set
+            {
+                if (SetProperty(ref this._topIndex, value))
+                {
+                    UpdateValues();
+                }
+            }
+        }
+
+        /// <summary>
+        /// インデックスの最大値を取得します。
+        /// </summary>
+        public int MaximumIndex { get { return this._allValues.Count - 1; } }
 
         /// <summary>
         /// 追加した回数をカウント
         /// </summary>
         private int _counter;
+
+        /// <summary>
+        /// 全値コレクション
+        /// </summary>
+        private List<int> _allValues = new List<int>();
     }
 }
