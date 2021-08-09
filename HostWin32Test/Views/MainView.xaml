@@ -22,15 +22,20 @@
       <Button Content="Remove" Command="{Binding RemoveCommand, Mode=OneTime}" />
     </StackPanel>
 
-    <ScrollViewer Grid.Row="1">
+    <Grid Grid.Row="1" Height="500">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
       <ItemsControl ItemsSource="{Binding Values}">
         <ItemsControl.ItemTemplate>
           <DataTemplate>
-            <vw:Win32Host Value="{Binding .}" />
+            <vw:Win32Host Value="{Binding .}" Height="250" />
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
-    </ScrollViewer>
+      <ScrollBar Grid.Column="1" Orientation="Vertical" Minimum="0" Maximum="{Binding MaximumIndex}" Value="{Binding TopIndex}" ViewportSize="10" MouseWheel="ScrollBar_MouseWheel" LargeChange="1" SmallChange="1" />
+    </Grid>
 
     <Button Grid.Row="2" Content="Dummy" />
   </Grid>
