@@ -34,7 +34,7 @@
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
-      <Slider Grid.Column="1" Value="{Binding TopIndex}" Minimum="0" Maximum="{Binding MaximumIndex}" Orientation="Vertical" IsDirectionReversed="True" MouseWheel="Slider_MouseWheel" />
+      <ScrollBar Grid.Column="1" Orientation="Vertical" Minimum="0" Maximum="{Binding MaximumIndex}" Value="{Binding TopIndex}" ViewportSize="10" MouseWheel="ScrollBar_MouseWheel" LargeChange="1" SmallChange="1" />
     </Grid>
 
     <Button Grid.Row="2" Content="Dummy" />

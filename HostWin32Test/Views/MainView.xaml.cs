@@ -12,18 +12,18 @@
             InitializeComponent();
         }
 
-        private void Slider_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        private void ScrollBar_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-            var slider = sender as System.Windows.Controls.Slider;
+            var scrollBar = sender as System.Windows.Controls.Primitives.ScrollBar;
             if (e.Delta < 0)
             {
-                var value = slider.Value + slider.LargeChange;
-                slider.Value = (value <= slider.Maximum) ? value : slider.Maximum;
+                var value = scrollBar.Value + scrollBar.LargeChange;
+                scrollBar.Value = (value <= scrollBar.Maximum) ? value : scrollBar.Maximum;
             }
             else
             {
-                var value = slider.Value - 1;
-                slider.Value = (value >= slider.Minimum) ? value : 0;
+                var value = scrollBar.Value - 1;
+                scrollBar.Value = (value >= scrollBar.Minimum) ? value : 0;
             }
         }
     }
