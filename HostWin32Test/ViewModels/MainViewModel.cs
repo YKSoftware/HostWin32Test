@@ -77,7 +77,7 @@
         /// </summary>
         public DelegateCommand RemoveCommand { get; private set; }
 
-        private int[] _values = new int[0];
+        private int[] _values = new int[2];
         /// <summary>
         /// 値コレクションを取得します。
         /// </summary>
