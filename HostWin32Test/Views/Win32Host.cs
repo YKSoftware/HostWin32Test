@@ -31,11 +31,19 @@
 
         public Win32Host()
         {
-            this._cppHandle = (IntPtr)User32.FindWindow(null, "Client");
+            GetClientProcess();
+        }
 
-            if (this._cppHandle != IntPtr.Zero)
+        private void GetClientProcess()
+        {
+            if (this._cppHandle == IntPtr.Zero)
             {
-                this.SizeChanged += OnSizeChanged;
+                this._cppHandle = (IntPtr)User32.FindWindow(null, "Client");
+
+                if (this._cppHandle != IntPtr.Zero)
+                {
+                    this.SizeChanged += OnSizeChanged;
+                }
             }
         }
 
@@ -50,6 +58,7 @@
 
         protected override HandleRef BuildWindowCore(HandleRef hwndParent)
         {
+            GetClientProcess();
             this._wpfHandle = hwndParent.Handle;
 
             this._cppHostHandle = User32.CreateWindowEx(
