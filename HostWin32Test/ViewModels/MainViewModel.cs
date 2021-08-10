@@ -59,7 +59,12 @@
         /// </summary>
         private void UpdateValues()
         {
-            this.Values = this._allValues.Skip(this.TopIndex).Take(2).ToArray();
+            if (this._allValues.Count == 0)
+                this.Values = Enumerable.Repeat<int>(0, 2).ToArray();
+            else if (this.TopIndex < this._allValues.Count - 1)
+                this.Values = this._allValues.Skip(this.TopIndex).Take(2).ToArray();
+            else
+                this.Values = new int[] { this._allValues.Last(), 0 };
         }
 
         /// <summary>

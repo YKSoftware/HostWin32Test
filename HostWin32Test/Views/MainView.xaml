@@ -27,13 +27,19 @@
         <ColumnDefinition />
         <ColumnDefinition Width="Auto" />
       </Grid.ColumnDefinitions>
-      <ItemsControl ItemsSource="{Binding Values}">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate>
-            <vw:Win32Host Value="{Binding .}" Height="250" />
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
+      <StackPanel>
+        <StackPanel.Resources>
+          <Style TargetType="{x:Type vw:Win32Host}">
+            <Style.Triggers>
+              <Trigger Property="Value" Value="0">
+                <Setter Property="Visibility" Value="Hidden" />
+              </Trigger>
+            </Style.Triggers>
+          </Style>
+        </StackPanel.Resources>
+        <vw:Win32Host Value="{Binding Values[0]}" Height="250" />
+        <vw:Win32Host Value="{Binding Values[1]}" Height="250" />
+      </StackPanel>
       <ScrollBar Grid.Column="1" Orientation="Vertical" Minimum="0" Maximum="{Binding MaximumIndex}" Value="{Binding TopIndex}" ViewportSize="10" MouseWheel="ScrollBar_MouseWheel" LargeChange="1" SmallChange="1" />
     </Grid>
 
